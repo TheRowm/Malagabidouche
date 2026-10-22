@@ -6,90 +6,132 @@
 <title>Compte à rebours 20 novembre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800&family=Instrument+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Inline&family=Instrument+Sans:wght@400;600;700&display=swap">
 <style>
-  /* Layout: one centred screen, four tall digit columns that wrap to a 2×2 grid on phones */
+  /* Layout: a feria night. Strings of bulbs across the top, neon digits centre stage, confetti drifting behind. Single dark theme by choice. */
   :root {
-    --bg: #eef1f7;
-    --bg-2: #dde3ef;
-    --fg: #1a2340;
-    --muted: #5b6684;
-    --accent: #c4621d;
-    --line: #c6cee0;
-    --display: "Big Shoulders Display", "Impact", "Arial Narrow", sans-serif;
+    --night: #140a26;
+    --night-2: #2a0f3d;
+    --cream: #fff4e6;
+    --muted: #c9b6dd;
+    --pink: #ff3d8b;
+    --sun: #ffb13b;
+    --sea: #2fd6c3;
+    --display: "Bungee", "Impact", "Arial Black", sans-serif;
+    --inline: "Bungee Inline", "Bungee", "Impact", sans-serif;
     --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #10162b; --bg-2: #1a2342; --fg: #eef0f8; --muted: #9aa4c4;
-      --accent: #f2a541; --line: #2c3760; color-scheme: dark;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #10162b; --bg-2: #1a2342; --fg: #eef0f8; --muted: #9aa4c4;
-    --accent: #f2a541; --line: #2c3760; color-scheme: dark;
+    color-scheme: dark;
   }
   html, body { height: 100%; }
   body { margin: 0; }
   body {
-    background: radial-gradient(120% 80% at 50% 0%, var(--bg-2), var(--bg) 70%);
-    background-color: var(--bg);
-    color: var(--fg);
+    background:
+      radial-gradient(90% 60% at 50% 110%, rgba(255, 61, 139, 0.28), transparent 70%),
+      radial-gradient(70% 50% at 50% -10%, var(--night-2), transparent 75%),
+      var(--night);
+    background-color: var(--night);
+    color: var(--cream);
     font-family: var(--body);
-    display: grid;
-    place-items: center;
+    overflow-x: hidden;
+  }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+  .lights { position: relative; height: 110px; z-index: 1; }
+  .lights svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .lights path { fill: none; stroke: #4a3560; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .bulb {
+    position: absolute; width: 12px; height: 16px; margin-left: -6px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: var(--c); box-shadow: 0 0 10px 2px var(--c), 0 0 26px 4px var(--c);
+    animation: flicker 2.6s ease-in-out infinite; animation-delay: var(--d);
+  }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+  main {
+    position: relative; z-index: 1;
+    display: grid; gap: 26px; justify-items: center; text-align: center;
+    max-width: 1000px; margin: 0 auto;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
-    padding-block: 32px;
-    box-sizing: border-box;
+    padding-block: 8px 48px;
   }
-  main { display: grid; gap: 28px; justify-items: center; width: 100%; max-width: 960px; text-align: center; }
-  .eyebrow {
-    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted); font-weight: 600; margin: 0;
+  .toast {
+    margin: 0; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--sea);
   }
+  .toast span { color: var(--muted); padding-inline: 0.5em; }
   h1 {
-    font-family: var(--display); font-weight: 800; margin: 0;
-    font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1; text-wrap: balance;
+    margin: 0; font-family: var(--inline); font-weight: 400; line-height: 1;
+    font-size: clamp(2.3rem, 8.5vw, 5.4rem); text-wrap: balance;
+    color: var(--sun);
+    text-shadow: 0 0 18px rgba(255, 177, 59, 0.55);
+    transform: rotate(-2deg);
   }
-  h1 span { color: var(--accent); }
-  .clock {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-    width: 100%; border-block: 1px solid var(--line);
+  .sub { margin: 0; font-size: clamp(1rem, 2.4vw, 1.25rem); color: var(--cream); font-weight: 600; text-wrap: balance; }
+  .sub em { font-style: normal; color: var(--pink); }
+
+  .clock { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; width: 100%; }
+  .unit {
+    display: grid; gap: 8px; min-width: 0; padding: 18px 6px 14px;
+    border: 2px solid var(--c); border-radius: 18px;
+    background: rgba(20, 10, 38, 0.6);
+    box-shadow: 0 0 22px -4px var(--c), inset 0 0 22px -10px var(--c);
   }
-  .unit { display: grid; gap: 6px; padding: 18px 8px; min-width: 0; }
-  .unit + .unit { border-left: 1px solid var(--line); }
+  .unit:nth-child(1) { --c: var(--pink); }
+  .unit:nth-child(2) { --c: var(--sun); }
+  .unit:nth-child(3) { --c: var(--sea); }
+  .unit:nth-child(4) { --c: var(--pink); }
   .num {
-    font-family: var(--display); font-weight: 800;
-    font-size: clamp(3.6rem, 13vw, 8.5rem); line-height: 0.95;
-    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+    font-family: var(--display); font-size: clamp(2.8rem, 10vw, 6.4rem); line-height: 1;
+    font-variant-numeric: tabular-nums; color: var(--cream);
+    text-shadow: 0 0 6px var(--c), 0 0 20px var(--c);
   }
-  .unit.sec .num { color: var(--accent); }
-  .label { font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-  .meta { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 60ch; line-height: 1.5; }
-  .meta strong { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
-  .done { font-family: var(--display); font-size: clamp(2.4rem, 8vw, 4.5rem); font-weight: 800; color: var(--accent); margin: 0; }
+  .num.pop { animation: pop 0.35s ease-out; }
+  @keyframes pop { 0% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .label { font-weight: 700; font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--c); }
+
+  .meta { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.55; max-width: 56ch; text-wrap: balance; }
+  .meta strong { color: var(--cream); font-variant-numeric: tabular-nums; }
+  .place {
+    margin: 0; font-family: var(--display); font-size: 0.95rem; letter-spacing: 0.08em;
+    color: var(--night); background: var(--sun); padding: 8px 16px; border-radius: 999px;
+    transform: rotate(1.5deg);
+  }
+  .done { margin: 0; font-family: var(--inline); font-size: clamp(2.6rem, 10vw, 6rem); color: var(--pink); text-shadow: 0 0 24px var(--pink); }
+
   @media (max-width: 560px) {
     .clock { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .unit:nth-child(3) { border-left: 0; }
-    .unit:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .lights { height: 80px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bulb, .num.pop { animation: none; }
   }
 </style>
 </head>
 <body>
-<main>
-  <p class="eyebrow">Vendredi 20 novembre 2026 · 18h00</p>
-  <h1>Plus que <span id="headline">…</span></h1>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="lights" id="lights" aria-hidden="true">
+  <svg viewBox="0 0 1000 110" preserveAspectRatio="none">
+    <path d="M0,8 Q500,88 1000,8"></path>
+    <path d="M0,22 Q500,122 1000,22"></path>
+  </svg>
+</div>
 
-  <section class="clock" id="clock" aria-live="off" aria-label="Temps restant">
+<main>
+  <p class="toast">Cheers<span>·</span>¡Salud!<span>·</span>Santé</p>
+  <h1 id="title">Malagabidouche</h1>
+  <p class="sub" id="sub">Plus que <em id="headline">…</em> avant la nuit sans fin</p>
+
+  <section class="clock" aria-label="Temps restant">
     <div class="unit"><span class="num" id="d">00</span><span class="label" id="ld">jours</span></div>
     <div class="unit"><span class="num" id="h">00</span><span class="label" id="lh">heures</span></div>
     <div class="unit"><span class="num" id="m">00</span><span class="label" id="lm">minutes</span></div>
-    <div class="unit sec"><span class="num" id="s">00</span><span class="label" id="ls">secondes</span></div>
+    <div class="unit"><span class="num" id="s">00</span><span class="label" id="ls">secondes</span></div>
   </section>
-  <p class="done" id="done" hidden>C'est l'heure !</p>
+  <p class="done" id="done" hidden>¡Vamos! La fiesta commence</p>
 
-  <p class="meta" id="meta">Soit <strong id="totalH">0</strong> heures ou <strong id="totalS">0</strong> secondes. Heure de Madrid (Málaga).</p>
+  <p class="meta" id="meta">Encore <strong id="totalH">0</strong> heures à tenir. Repose ton foie, prépare ta voix, le vendredi 20 novembre à 18h on ne rentre plus.</p>
+  <p class="place">Málaga · Costa del Sol</p>
 </main>
 
 <script>
@@ -99,31 +141,91 @@
   const pad = (n) => String(n).padStart(2, "0");
   const fmt = new Intl.NumberFormat("fr-FR");
   const plural = (n, one, many) => (n <= 1 ? one : many);
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Guirlandes : ampoules posées le long des deux courbes du SVG
+  const colors = ["#ff3d8b", "#ffb13b", "#2fd6c3", "#fff4e6"];
+  const strands = [{ y0: 8, sag: 80, n: 22 }, { y0: 22, sag: 100, n: 18, shift: 0.5 }];
+  const lights = $("lights");
+  strands.forEach(({ y0, sag, n, shift = 0 }, si) => {
+    for (let i = 0; i < n; i++) {
+      const t = (i + 0.5 + shift * 0.5) / (n + shift * 0.5);
+      const b = document.createElement("span");
+      b.className = "bulb";
+      b.style.left = t * 100 + "%";
+      b.style.top = y0 + 2 * sag * t * (1 - t) - 1 + "px";
+      b.style.setProperty("--c", colors[(i + si) % colors.length]);
+      b.style.setProperty("--d", ((i * 0.37) % 2.6).toFixed(2) + "s");
+      lights.appendChild(b);
+    }
+  });
+
+  // Confettis
+  const canvas = $("confetti");
+  const ctx = canvas.getContext("2d");
+  let W = 0, H = 0, bits = [], burst = false;
+  function resize() {
+    const r = window.devicePixelRatio || 1;
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * r; canvas.height = H * r;
+    ctx.setTransform(r, 0, 0, r, 0, 0);
+  }
+  function spawn(y) {
+    return {
+      x: Math.random() * W, y: y ?? Math.random() * H,
+      w: 5 + Math.random() * 6, h: 3 + Math.random() * 4,
+      vy: 0.4 + Math.random() * 0.9, vx: -0.3 + Math.random() * 0.6,
+      a: Math.random() * Math.PI, va: -0.05 + Math.random() * 0.1,
+      c: colors[Math.floor(Math.random() * colors.length)],
+    };
+  }
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of bits) {
+      p.y += p.vy * (burst ? 2.2 : 1); p.x += p.vx + Math.sin(p.y / 40) * 0.3; p.a += p.va;
+      if (p.y > H + 10) Object.assign(p, spawn(-10));
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
+      ctx.globalAlpha = burst ? 0.95 : 0.55; ctx.fillStyle = p.c;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+    }
+    requestAnimationFrame(frame);
+  }
+  if (!reduced) {
+    resize();
+    window.addEventListener("resize", resize);
+    bits = Array.from({ length: W < 600 ? 40 : 70 }, () => spawn());
+    requestAnimationFrame(frame);
+  }
+
+  // Compte à rebours
+  const last = {};
+  function set(id, value) {
+    const el = $(id);
+    if (last[id] === value) return;
+    el.textContent = value;
+    if (last[id] !== undefined && !reduced) { el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
+    last[id] = value;
+  }
   function tick() {
-    const diff = Math.max(0, TARGET - Date.now());
-    const total = Math.floor(diff / 1000);
+    const total = Math.floor(Math.max(0, TARGET - Date.now()) / 1000);
     const d = Math.floor(total / 86400);
     const h = Math.floor((total % 86400) / 3600);
     const m = Math.floor((total % 3600) / 60);
     const s = total % 60;
 
-    $("d").textContent = pad(d);
-    $("h").textContent = pad(h);
-    $("m").textContent = pad(m);
-    $("s").textContent = pad(s);
+    set("d", pad(d)); set("h", pad(h)); set("m", pad(m)); set("s", pad(s));
     $("ld").textContent = plural(d, "jour", "jours");
     $("lh").textContent = plural(h, "heure", "heures");
     $("lm").textContent = plural(m, "minute", "minutes");
     $("ls").textContent = plural(s, "seconde", "secondes");
     $("headline").textContent = d > 0 ? `${d} ${plural(d, "jour", "jours")}` : `${h} h ${pad(m)}`;
     $("totalH").textContent = fmt.format(Math.floor(total / 3600));
-    $("totalS").textContent = fmt.format(total);
 
     if (total === 0) {
       $("done").hidden = false;
+      $("sub").hidden = true;
       $("meta").hidden = true;
-      document.querySelector("h1").hidden = true;
+      burst = true;
       return;
     }
     setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
