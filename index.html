@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Compte à rebours 20 novembre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800&family=Instrument+Sans:wght@400;600&display=swap">
+<style>
+  /* Layout: one centred screen, four tall digit columns that wrap to a 2×2 grid on phones */
+  :root {
+    --bg: #eef1f7;
+    --bg-2: #dde3ef;
+    --fg: #1a2340;
+    --muted: #5b6684;
+    --accent: #c4621d;
+    --line: #c6cee0;
+    --display: "Big Shoulders Display", "Impact", "Arial Narrow", sans-serif;
+    --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10162b; --bg-2: #1a2342; --fg: #eef0f8; --muted: #9aa4c4;
+      --accent: #f2a541; --line: #2c3760; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10162b; --bg-2: #1a2342; --fg: #eef0f8; --muted: #9aa4c4;
+    --accent: #f2a541; --line: #2c3760; color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { margin: 0; }
+  body {
+    background: radial-gradient(120% 80% at 50% 0%, var(--bg-2), var(--bg) 70%);
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    display: grid;
+    place-items: center;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 32px;
+    box-sizing: border-box;
+  }
+  main { display: grid; gap: 28px; justify-items: center; width: 100%; max-width: 960px; text-align: center; }
+  .eyebrow {
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin: 0;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 800; margin: 0;
+    font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1; text-wrap: balance;
+  }
+  h1 span { color: var(--accent); }
+  .clock {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%; border-block: 1px solid var(--line);
+  }
+  .unit { display: grid; gap: 6px; padding: 18px 8px; min-width: 0; }
+  .unit + .unit { border-left: 1px solid var(--line); }
+  .num {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(3.6rem, 13vw, 8.5rem); line-height: 0.95;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  }
+  .unit.sec .num { color: var(--accent); }
+  .label { font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .meta { margin: 0; color: var(--muted); font-size: 0.95rem; max-width: 60ch; line-height: 1.5; }
+  .meta strong { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .done { font-family: var(--display); font-size: clamp(2.4rem, 8vw, 4.5rem); font-weight: 800; color: var(--accent); margin: 0; }
+  @media (max-width: 560px) {
+    .clock { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .unit:nth-child(3) { border-left: 0; }
+    .unit:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Vendredi 20 novembre 2026 · 18h00</p>
+  <h1>Plus que <span id="headline">…</span></h1>
+
+  <section class="clock" id="clock" aria-live="off" aria-label="Temps restant">
+    <div class="unit"><span class="num" id="d">00</span><span class="label" id="ld">jours</span></div>
+    <div class="unit"><span class="num" id="h">00</span><span class="label" id="lh">heures</span></div>
+    <div class="unit"><span class="num" id="m">00</span><span class="label" id="lm">minutes</span></div>
+    <div class="unit sec"><span class="num" id="s">00</span><span class="label" id="ls">secondes</span></div>
+  </section>
+  <p class="done" id="done" hidden>C'est l'heure !</p>
+
+  <p class="meta" id="meta">Soit <strong id="totalH">0</strong> heures ou <strong id="totalS">0</strong> secondes. Heure de Madrid (Málaga).</p>
+</main>
+
+<script>
+  // 20 novembre 2026 18:00, heure d'Espagne (CET, UTC+1 en novembre)
+  const TARGET = new Date("2026-11-20T18:00:00+01:00").getTime();
+  const $ = (id) => document.getElementById(id);
+  const pad = (n) => String(n).padStart(2, "0");
+  const fmt = new Intl.NumberFormat("fr-FR");
+  const plural = (n, one, many) => (n <= 1 ? one : many);
+
+  function tick() {
+    const diff = Math.max(0, TARGET - Date.now());
+    const total = Math.floor(diff / 1000);
+    const d = Math.floor(total / 86400);
+    const h = Math.floor((total % 86400) / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+
+    $("d").textContent = pad(d);
+    $("h").textContent = pad(h);
+    $("m").textContent = pad(m);
+    $("s").textContent = pad(s);
+    $("ld").textContent = plural(d, "jour", "jours");
+    $("lh").textContent = plural(h, "heure", "heures");
+    $("lm").textContent = plural(m, "minute", "minutes");
+    $("ls").textContent = plural(s, "seconde", "secondes");
+    $("headline").textContent = d > 0 ? `${d} ${plural(d, "jour", "jours")}` : `${h} h ${pad(m)}`;
+    $("totalH").textContent = fmt.format(Math.floor(total / 3600));
+    $("totalS").textContent = fmt.format(total);
+
+    if (total === 0) {
+      $("done").hidden = false;
+      $("meta").hidden = true;
+      document.querySelector("h1").hidden = true;
+      return;
+    }
+    setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
+  }
+  tick();
+</script>
+</body>
+</html>
